@@ -44,7 +44,7 @@ const Welcome = () => {
             onPress={() => {
                isLastSlide ? router.replace("/(auth)/sign-up") : swiperRef.current?.scrollBy(1);
             }}
-            className="w-11/12 mt-10"
+            className="w-11/12 mt-10 mb-4"
          />
       </SafeAreaView>
    );
