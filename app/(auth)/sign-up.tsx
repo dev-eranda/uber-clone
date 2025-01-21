@@ -5,7 +5,7 @@ import { icons, images } from "@/constant";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Alert, Image, ScrollView, Text, View } from "react-native";
 import { ReactNativeModal } from "react-native-modal";
 
 const SignUp = () => {
@@ -41,7 +41,8 @@ const SignUp = () => {
             ...verification,
             state: "pending",
          });
-      } catch (err) {
+      } catch (err: any) {
+         Alert.alert("Error", err.errors[0].longMessage);
          console.error(JSON.stringify(err, null, 2));
       }
    };
@@ -61,7 +62,8 @@ const SignUp = () => {
             await setActive({ session: signUpAttempt.createdSessionId });
             setVerification({ ...verification, state: "success" });
          } else {
-            setVerification({ ...verification, error: "Vefirication failed", state: "success" });
+            setVerification({ ...verification, error: "Verification failed", state: "failed" });
+            console.error(JSON.stringify(signUpAttempt, null, 2));
          }
       } catch (err: any) {
          setVerification({ ...verification, error: err.errors[0].longMessage, state: "failed" });
@@ -113,7 +115,7 @@ const SignUp = () => {
 
             {/* Verification modal */}
             <ReactNativeModal
-               isVisible={verification.state === "pending"}
+               isVisible={verification.state === "pending" || verification.state === "failed"}
                // onBackdropPress={() =>
                //   setVerification({ ...verification, state: "default" })
                // }
@@ -146,7 +148,10 @@ const SignUp = () => {
                   </Text>
                   <CustomButton
                      title="Browse Home"
-                     onPress={() => router.push(`/(root)/(tabs)/home`)}
+                     onPress={() => {
+                        setShowSuccessModal(false);
+                        router.push(`/(root)/(tabs)/home`);
+                     }}
                      className="mt-5"
                   />
                </View>

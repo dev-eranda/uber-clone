@@ -1,8 +1,12 @@
 import { icons } from "@/constant";
 import { Image, Text, View } from "react-native";
 import CustomButton from "./CustomButton";
+import { useSignUp } from "@clerk/clerk-expo";
+
 
 const OAuth = () => {
+   const { isLoaded, signUp, setActive } = useSignUp();
+
    const handleGoogleSignIn = () => {};
 
    return (

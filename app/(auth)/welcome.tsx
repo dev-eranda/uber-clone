@@ -1,6 +1,7 @@
 import CustomButton from "@/components/CustomButton";
 import { onboarding } from "@/constant";
 import { router } from "expo-router";
+import debounce from "lodash.debounce";
 import { useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,6 +11,14 @@ const Welcome = () => {
    const swiperRef = useRef<Swiper>(null);
    const [activeIndex, setActiveIndex] = useState(0);
    const isLastSlide = activeIndex === onboarding.length - 1;
+
+   const handleNextPress = debounce(() => {
+      if (isLastSlide) {
+         router.replace("/(auth)/sign-up");
+      } else {
+         swiperRef.current?.scrollBy(1);
+      }
+   }, 100);
 
    return (
       <SafeAreaView className="flex items-center justify-between h-full bg-white">
@@ -42,9 +51,7 @@ const Welcome = () => {
          <View className="flex flex-row p-5">
             <CustomButton
                title={isLastSlide ? "Get Started" : "Next"}
-               onPress={() => {
-                  isLastSlide ? router.replace("/(auth)/sign-up") : swiperRef.current?.scrollBy(1);
-               }}
+               onPress={handleNextPress}
                className="w-11/12 mt-10 mb-4"
             />
          </View>
